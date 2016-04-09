@@ -1,7 +1,11 @@
 #!/bin/bash
-sourceDirectory="/media/popcorn/Transfer/ubuserver/Movies/"
-movieDirectory="/media/Media/Movies2/"
-kidsDirectory="/media/Media/Kids2/"
+if [ $1 = "movies" ]; then
+        sourceDirectory="/media/popcorn/Transfer/ubuserver/Movies/"
+        targetDirectory="/media/Media/Movies2/"
+elif [ $1 = "kids" ]; then
+        sourceDirectory="/media/popcorn/Transfer/ubuserver/Kids/"
+        targetDirectory="/media/Media/Kids2/"
+fi
 
 #First go into our source directory
 cd $sourceDirectory
@@ -38,11 +42,12 @@ echo "Rename Complete"
 
 #Move
 if [ $1 = "kids" ]; then
-	echo "Moving to Kids directory"
-	echo `mv $sourceDirectory* $kidsDirectory`
-else
-	echo "Moving to Movies directory"
-	echo `mv $sourceDirectory* $movieDirectory`
+        echo "Moving to Kids directory"
+        echo `mv $sourceDirectory* $targetDirectory`
+elif [ $1 = "movies" ]; then
+        echo "Moving to Movies directory"
+        echo `mv $sourceDirectory* $targetDirectory`
 fi
+
 
 echo "Move Complete"
