@@ -5,6 +5,8 @@ if [ $1 = "movies" ]; then
 elif [ $1 = "kids" ]; then
         sourceDirectory="/media/popcorn/Transfer/ubuserver/Kids/"
         targetDirectory="/media/Media/Kids2/"
+else
+	exit 1
 fi
 
 #First go into our source directory
@@ -22,6 +24,7 @@ find . -type f -name "*.jpg" -exec rm -f {} \;
 find . -type f -name "*.url" -exec rm -f {} \;
 find . -type f -name "*.sfv" -exec rm -f {} \;
 find . -type f -name "*.srt" -exec rm -f {} \;
+find . -type f -name "*.nfo" -exec rm -f {} \;
 
 #Based on names sample|trailer|extras|
 find . -type f -name "*sample*" -exec rm -f {} \;
