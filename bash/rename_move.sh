@@ -1,12 +1,15 @@
 #!/bin/bash
+if [[ $# -eq 0 ]] ; then
+    echo 'Please provide either "movies" or "kids" argument'
+    exit 0
+fi
+
 if [ $1 = "movies" ]; then
         sourceDirectory="/media/popcorn/Transfer/ubuserver/Movies/"
         targetDirectory="/media/Media/Movies2/"
 elif [ $1 = "kids" ]; then
         sourceDirectory="/media/popcorn/Transfer/ubuserver/Kids/"
         targetDirectory="/media/Media/Kids2/"
-else
-	exit 1
 fi
 
 #First go into our source directory
