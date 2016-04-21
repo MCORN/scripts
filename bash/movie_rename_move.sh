@@ -1,15 +1,31 @@
 #!/bin/bash
+usage="$(basename "$0") [help] [movies] [kids]-- program to autosort movie files
+
+where:
+    help  show this help text
+    movies sets a specific source and destination for adult content
+    kids sets a specific source and destination for kids content
+
+    The last 2 options then continue processing through the following steps:
+    - files in source folder are moved from subfolders if any to the root source folder
+    - empty directories and non-media files are removed using hardcoded rules
+    - remaining files are renamed using Filebot in a human-friendly format
+    - remaining files are moved to the destination"
+
 if [[ $# -eq 0 ]] ; then
-    echo 'Please provide either "movies" or "kids" argument'
+    echo 'Please provide either "help", movies" or "kids" argument'
     exit 0
 fi
 
-if [ $1 = "movies" ]; then
-        sourceDirectory="/media/popcorn/Transfer/ubuserver/Movies/"
-        targetDirectory="/media/Media/Movies2/"
+if [ "$1" == "help" ]; then
+  echo "$usage"
+  exit 0
+elif [ $1 = "movies" ]; then
+    sourceDirectory="/media/popcorn/Transfer/ubuserver/Movies/"
+    targetDirectory="/media/Media/Movies2/"
 elif [ $1 = "kids" ]; then
-        sourceDirectory="/media/popcorn/Transfer/ubuserver/Kids/"
-        targetDirectory="/media/Media/Kids2/"
+    sourceDirectory="/media/popcorn/Transfer/ubuserver/Kids/"
+    targetDirectory="/media/Media/Kids2/"
 fi
 
 #First go into our source directory
