@@ -47,6 +47,7 @@ find . -type f -name "*.nfo" -exec rm -f {} \;
 
 #Based on names sample|trailer|extras|
 find . -type f -name "*sample*" -exec rm -f {} \;
+find . -type f -name "*Sample*" -exec rm -f {} \;
 find . -type f -name "*trailer*" -exec rm -f {} \;
 find . -type f -name "*extras*" -exec rm -f {} \;
 find . -type f -name "ETRG.mp4" -exec rm -f {} \;
