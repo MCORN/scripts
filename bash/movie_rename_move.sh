@@ -21,10 +21,10 @@ if [ "$1" == "help" ]; then
   echo "$usage"
   exit 0
 elif [ $1 = "movies" ]; then
-    sourceDirectory="/media/popcorn/Transfer/ubuserver/Movies/"
+    sourceDirectory="/media/Other/Transfer/Movies/"
     targetDirectory="/media/Media/Movies2/"
 elif [ $1 = "kids" ]; then
-    sourceDirectory="/media/popcorn/Transfer/ubuserver/Kids/"
+    sourceDirectory="/media/Other/Transfer/Kids/"
     targetDirectory="/media/Media/Kids2/"
 fi
 
