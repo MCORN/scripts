@@ -9,12 +9,12 @@ where:
 if [ "$1" == "help" ]; then
   echo "$usage"
   exit 0
-elif [[ $# -eq 0 ]] ; then
-    public_ip=`dig +short mcornille.no-ip.org @resolver1.opendns.com`
-    external_ip=`curl -sS ipinfo.io/ip`   
+else
+    public_ip=$(dig +short $1.no-ip.org @resolver1.opendns.com)
+    external_ip=$(curl -sS ipinfo.io/ip)   
     if [ $public_ip == $external_ip ]; then
         touch test.txt
-        /usr/bin/mail -s "$(hostname) is not on the VPN" mcornille@gmail.com < test.txt
+        /usr/bin/mail -s "$(hostname) is not on the VPN" $1@gmail.com < test.txt
         rm test.txt
         exit 0
     fi
