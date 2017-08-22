@@ -59,7 +59,7 @@ find . -type d -empty -delete
 echo "Renaming"
 
 #Using filebot to rename files consistently - see http://www.filebot.net/cli.html
-echo `filebot -rename $sourceDirectory* --format '{n} ({y})' -non-strict`
+echo `sudo /snap/bin/filebot -rename $sourceDirectory* --format '{n} ({y})' -non-strict`
 
 echo "Rename Complete"
 

@@ -1,7 +1,7 @@
 # Based on https://www.zufallsheld.de/2014/01/25/python-backup-script-revisited/
 # http://amoffat.github.io/sh/
 # Example
-# /usr/bin/python /home/mathieu/scripts/python/backup.py --logfile=/home/mathieu/logs/backup.log --trash /media/Media/ /media/Media-Backup
+# /usr/bin/python /home/mathieu/Git/scripts/python/backup.py --logfile=/home/mathieu/logs/backup.log --trash /media/Media/ /media/Media-Backup
 
 #!/usr/bin/env python
 

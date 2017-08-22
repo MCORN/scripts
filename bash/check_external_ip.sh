@@ -13,9 +13,9 @@ else
     public_ip=$(dig +short $1.no-ip.org @resolver1.opendns.com)
     { echo "wget -qO- http://ipecho.net/plain > /share/Download/output.txt"; sleep 1; } | telnet 192.168.3.103
     external_ip=$(</media/popcorn/Download/output.txt)
-    echo "$external_ip"   
     if [ $public_ip == $external_ip ]; then
         touch test.txt
+        echo "Body for email" > test.txt
         /usr/bin/mail -s "$(hostname) is not on the VPN" $1@gmail.com < test.txt
         rm test.txt
         exit 0
