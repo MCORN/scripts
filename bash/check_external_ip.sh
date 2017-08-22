@@ -16,7 +16,7 @@ else
     if [ $public_ip == $external_ip ]; then
         touch test.txt
         echo "Body for email" > test.txt
-        /usr/bin/mail -s "$(hostname) is not on the VPN" $1@gmail.com < test.txt
+        /usr/bin/mail -s "Popcorn is not on the VPN" $1@gmail.com < test.txt
         rm test.txt
         exit 0
     fi
