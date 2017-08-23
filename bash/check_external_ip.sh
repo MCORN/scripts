@@ -11,6 +11,7 @@ if [ "$1" == "help" ]; then
   exit 0
 else
     public_ip=$(dig +short $1.no-ip.org @resolver1.opendns.com)
+    rm -f /media/popcorn/Download/output.txt
     { echo "wget -qO- http://ipecho.net/plain > /share/Download/output.txt"; sleep 1; } | telnet 192.168.3.103
     external_ip=$(</media/popcorn/Download/output.txt)
     if [ $public_ip == $external_ip ]; then
