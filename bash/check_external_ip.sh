@@ -23,14 +23,36 @@ if [ "$1" == "help" ]; then
   exit 0
 else
     #On VPN
-    public_ip=$(wget -qO- http://ipecho.net/plain)
+    machine_ip=$(wget -qO- http://ipecho.net/plain)
     #Off VPN
-    external_ip=$(ssh $USERSERVER@$IPSERVER "wget -qO- http://ipecho.net/plain")
+    public_ip=$(</home/mathieu/Downloads/ip.txt)
     #If the same, Houston we have a problem! Restart OpenVPN
-    if [ $public_ip == $external_ip ]; then
-        sshpass -p $PASSWD ssh -o StrictHostKeyChecking=no $USERROUTER@$IPROUTER '/usr/bin/killall openvpn;/usr/sbin/openvpn --config /tmp/openvpncl/openvpn.conf --route-up /tmp/openvpncl/route-up.sh --down-pre /tmp/openvpncl/route-down.sh --daemon;'
-        ssh $USERSERVER@$IPSERVER "touch test.txt;echo 'Body for email' > test.txt;/usr/bin/mail -s 'Popcorn is not on the VPN' $EMAIL@gmail.com < test.txt;rm test.txt;"
-        exit 0
+    if [ $public_ip == $machine_ip ]; then
+        #Stop all torrents
+        /usr/bin/transmission-remote -t all -S
+        #Restart open-vpn
+        service openvpn stop
+        sleep 5
+        service openvpn start
+        #Send an email
+        /home/mathieu/Git/scripts/bash/send_email.sh 'MacMini is not on the VPN'
+    else
+        # find out number of torrent
+        TORRENTLIST=`/usr/bin/transmission-remote --list | sed -e '1d;$d;s/^ *//' | cut --only-delimited --delimiter=' ' --fields=1`
+        for TORRENTID in $TORRENTLIST
+        do
+            # find out if torrent complete or not
+            DL_COMPLETED=`/usr/bin/transmission-remote --torrent $TORRENTID --info | grep "Percent Done: 100%"`
+            # pause completed torrents & and start uncomplete torrents
+            if [ "$DL_COMPLETED" != "" ]; then
+                TORRENTLOCATION=`/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| sed -e "s/^ *Location: \/home\/mathieu\/D$
+                /usr/bin/transmission-remote --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/$TORRENTLOCATION/ > /dev/null 2>&1
+                /usr/bin/transmission-remote --torrent $TORRENTID --remove > /dev/null 2>&1
+            else
+                /usr/bin/transmission-remote --torrent $TORRENTID --start > /dev/null 2>&1
+            fi
+        done
     fi
     exit 0
 fi
+
