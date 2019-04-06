@@ -31,11 +31,11 @@ else
         #Stop all torrents
         /usr/bin/transmission-remote -t all -S
         #Restart open-vpn
-        service openvpn stop
-        sleep 5
-        service openvpn start
-        #Send an email
-        /home/mathieu/Git/scripts/bash/send_email.sh 'MacMini is not on the VPN'
+	service openvpn stop
+	sleep 5
+	service openvpn start
+	#Send an email
+	/home/mathieu/Git/scripts/bash/send_email.sh 'MacMini is not on the VPN'
     else
         # find out number of torrent
         TORRENTLIST=`/usr/bin/transmission-remote --list | sed -e '1d;$d;s/^ *//' | cut --only-delimited --delimiter=' ' --fields=1`
@@ -45,14 +45,27 @@ else
             DL_COMPLETED=`/usr/bin/transmission-remote --torrent $TORRENTID --info | grep "Percent Done: 100%"`
             # pause completed torrents & and start uncomplete torrents
             if [ "$DL_COMPLETED" != "" ]; then
-                TORRENTLOCATION=`/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| sed -e "s/^ *Location: \/home\/mathieu\/D$
-                /usr/bin/transmission-remote --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/$TORRENTLOCATION/ > /dev/null 2>&1
+              # if already moved, then remove from transmission
+              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Transfer-macmini") = *Transfer-macmini* ]]; then
                 /usr/bin/transmission-remote --torrent $TORRENTID --remove > /dev/null 2>&1
+              fi
+              # if completed, move to relevant folder
+              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Movies") = *Movies* ]]; then
+                /usr/bin/transmission-remote --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Movies/ > /dev/null 2>&1
+	      fi
+              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Kids") = *Kids* ]]; then
+                /usr/bin/transmission-remote --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Kids/ > /dev/null 2>&1
+              fi
+              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Music") = *Music* ]]; then
+                /usr/bin/transmission-remote --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Music/ > /dev/null 2>&1
+              fi
+              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Other") = *Other* ]]; then
+                /usr/bin/transmission-remote --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Other/ > /dev/null 2>&1
+              fi
             else
                 /usr/bin/transmission-remote --torrent $TORRENTID --start > /dev/null 2>&1
-            fi
-        done
+	    fi
+	done
     fi
     exit 0
 fi
-
