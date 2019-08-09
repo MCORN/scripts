@@ -16,7 +16,7 @@ where:
     IPSERVER - IP server
     "
 
-. check_external_ip.config
+#. check_external_ip.config
 
 if [ "$1" == "help" ]; then
   echo "$usage"
@@ -25,17 +25,17 @@ else
     #On VPN
     machine_ip=$(wget -qO- http://ipecho.net/plain)
     #Off VPN
-    public_ip=$(</home/mathieu/Downloads/ip.txt)
+    public_ip=$(</media/ubuserver/ip.txt)
     #If the same, Houston we have a problem! Restart OpenVPN
     if [ $public_ip == $machine_ip ]; then
         #Stop all torrents
         /usr/bin/transmission-remote -t all -S
         #Restart open-vpn
-	service openvpn stop
+	systemctl stop openvpnauto.service
 	sleep 5
-	service openvpn start
+	systemctl start openvpnauto.service
 	#Send an email
-	/home/mathieu/Git/scripts/bash/send_email.sh 'MacMini is not on the VPN'
+	/home/mathieu/Git/scripts/bash/send_email.sh 'Ubu-serv-04 is not on the VPN'
     else
         # find out number of torrent
         TORRENTLIST=`/usr/bin/transmission-remote --list | sed -e '1d;$d;s/^ *//' | cut --only-delimited --delimiter=' ' --fields=1`
@@ -46,20 +46,20 @@ else
             # pause completed torrents & and start uncomplete torrents
             if [ "$DL_COMPLETED" != "" ]; then
               # if already moved, then remove from transmission
-              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Transfer-macmini") = *Transfer-macmini* ]]; then
+              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Transfer-macmini") != "" ]]; then
                 /usr/bin/transmission-remote --torrent $TORRENTID --remove > /dev/null 2>&1
               fi
               # if completed, move to relevant folder
-              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Movies") = *Movies* ]]; then
+              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Movies") != "" ]]; then
                 /usr/bin/transmission-remote --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Movies/ > /dev/null 2>&1
 	      fi
-              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Kids") = *Kids* ]]; then
+              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Kids") != "" ]]; then
                 /usr/bin/transmission-remote --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Kids/ > /dev/null 2>&1
               fi
-              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Music") = *Music* ]]; then
+              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Music") != "" ]]; then
                 /usr/bin/transmission-remote --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Music/ > /dev/null 2>&1
               fi
-              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Other") = *Other* ]]; then
+              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Other") != "" ]]; then
                 /usr/bin/transmission-remote --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Other/ > /dev/null 2>&1
               fi
             else
