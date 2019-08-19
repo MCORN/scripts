@@ -54,12 +54,12 @@ else:
 logging.info("Starting rsync.")
 if args.echo:
 	if args.trash:
-		del_args = "--del"
+		del_args = "--del --bwlimit=500"
 	else:
-		del_args = ""
+		del_args = "--bwlimit=500"
 	print("The command is rsync %s %s %s %s %s %s" % (rsync_args, del_args, backupdir, destinationdir, ">>", log_args))
 else:
 	if args.trash:
-		rsync(rsync_args,"--del",backupdir,destinationdir,_out=log_args)
+		rsync(rsync_args,"--del --bwlimit=500",backupdir,destinationdir,_out=log_args)
 	else:
-		rsync(rsync_args,backupdir,destinationdir,_out=log_args)
+		rsync(rsync_args,"--bwlimit=500",backupdir,destinationdir,_out=log_args)
