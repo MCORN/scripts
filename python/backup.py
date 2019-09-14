@@ -39,7 +39,7 @@ def check_dir_exist(os_dir):
 check_dir_exist(backupdir)
 check_dir_exist(destinationdir)
 
-#Core rsync arguments				
+#Core rsync arguments
 rsync_args = "-ahv"
 
 #Add rsync arguments based on user input	
@@ -56,10 +56,10 @@ if args.echo:
 	if args.trash:
 		del_args = "--del --bwlimit=500"
 	else:
-		del_args = "--bwlimit=500"
+		del_args = "--bwlimit=500 --ignore-existing"
 	print("The command is rsync %s %s %s %s %s %s" % (rsync_args, del_args, backupdir, destinationdir, ">>", log_args))
 else:
 	if args.trash:
 		rsync(rsync_args,"--del --bwlimit=500",backupdir,destinationdir,_out=log_args)
 	else:
-		rsync(rsync_args,"--bwlimit=500",backupdir,destinationdir,_out=log_args)
+		rsync(rsync_args,"--bwlimit=500","--ignore-existing",backupdir,destinationdir,_out=log_args)
