@@ -9,14 +9,7 @@ where:
     * config file 'check_external_ip.config' located in same directory as this script
     * Parameters defined in config file are:
     EMAIL - prefix to @gmail.com
-    PASSWD - router user password
-    USERSERVER - server user name
-    USERROUTER - router user name
-    IPROUTER - IP router
-    IPSERVER - IP server
     "
-
-#. check_external_ip.config
 
 if [ "$1" == "help" ]; then
   echo "$usage"
@@ -38,32 +31,32 @@ else
 	/home/mathieu/Git/scripts/bash/send_email.sh 'Ubu-serv-04 is not on the VPN'
     else
         # find out number of torrent
-        TORRENTLIST=`/usr/bin/transmission-remote --list | sed -e '1d;$d;s/^ *//' | cut --only-delimited --delimiter=' ' --fields=1`
+        TORRENTLIST=`/usr/bin/transmission-remote localhost:80 --list | sed -e '1d;$d;s/^ *//' | cut --only-delimited --delimiter=' ' --fields=1`
         for TORRENTID in $TORRENTLIST
         do
             # find out if torrent complete or not
-            DL_COMPLETED=`/usr/bin/transmission-remote --torrent $TORRENTID --info | grep "Percent Done: 100%"`
+            DL_COMPLETED=`/usr/bin/transmission-remote localhost:80 --torrent $TORRENTID --info | grep "Percent Done: 100%"`
             # pause completed torrents & and start uncomplete torrents
             if [ "$DL_COMPLETED" != "" ]; then
               # if already moved, then remove from transmission
-              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Transfer-macmini") != "" ]]; then
-                /usr/bin/transmission-remote --torrent $TORRENTID --remove > /dev/null 2>&1
+              if [[ $(/usr/bin/transmission-remote localhost:80 -l -t $TORRENTID --info | grep Location| grep "Transfer-macmini") != "" ]]; then
+                /usr/bin/transmission-remote localhost:80 --torrent $TORRENTID --remove > /dev/null 2>&1
               fi
               # if completed, move to relevant folder
-              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Movies") != "" ]]; then
-                /usr/bin/transmission-remote --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Movies/ > /dev/null 2>&1
+              if [[ $(/usr/bin/transmission-remote localhost:80 -l -t $TORRENTID --info | grep Location| grep "Downloads/Movies") != "" ]]; then
+                /usr/bin/transmission-remote localhost:80 --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Movies/ > /dev/null 2>&1
 	      fi
-              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Kids") != "" ]]; then
-                /usr/bin/transmission-remote --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Kids/ > /dev/null 2>&1
+              if [[ $(/usr/bin/transmission-remote localhost:80 -l -t $TORRENTID --info | grep Location| grep "Downloads/Kids") != "" ]]; then
+                /usr/bin/transmission-remote localhost:80 --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Kids/ > /dev/null 2>&1
               fi
-              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Music") != "" ]]; then
-                /usr/bin/transmission-remote --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Music/ > /dev/null 2>&1
+              if [[ $(/usr/bin/transmission-remote localhost:80 -l -t $TORRENTID --info | grep Location| grep "Downloads/Music") != "" ]]; then
+                /usr/bin/transmission-remote localhost:80 --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Music/ > /dev/null 2>&1
               fi
-              if [[ $(/usr/bin/transmission-remote -l -t $TORRENTID --info | grep Location| grep "Downloads/Other") != "" ]]; then
-                /usr/bin/transmission-remote --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Other/ > /dev/null 2>&1
+              if [[ $(/usr/bin/transmission-remote localhost:80 -l -t $TORRENTID --info | grep Location| grep "Downloads/Other") != "" ]]; then
+                /usr/bin/transmission-remote localhost:80 --torrent $TORRENTID --move /media/ubuserver/Transfer-macmini/Other/ > /dev/null 2>&1
               fi
             else
-                /usr/bin/transmission-remote --torrent $TORRENTID --start > /dev/null 2>&1
+                /usr/bin/transmission-remote localhost:80 --torrent $TORRENTID --start > /dev/null 2>&1
 	    fi
 	done
     fi
